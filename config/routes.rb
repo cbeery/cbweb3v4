@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get "dashboard/index"
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   root to: "home#index", as: 'home'
@@ -15,4 +18,12 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  authenticate :user, ->(u) { u.admin? } do
+    namespace :admin do
+      resources :items
+      root to: 'dashboard#index'
+    end
+  end
+  
 end
